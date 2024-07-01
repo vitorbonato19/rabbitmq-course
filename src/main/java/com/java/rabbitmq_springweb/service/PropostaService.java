@@ -3,6 +3,7 @@ package com.java.rabbitmq_springweb.service;
 import com.java.rabbitmq_springweb.controller.dto.PropostaRequestDto;
 import com.java.rabbitmq_springweb.controller.dto.PropostaResponseDto;
 import com.java.rabbitmq_springweb.entity.Proposta;
+import com.java.rabbitmq_springweb.mapper.PropostaMapper;
 import com.java.rabbitmq_springweb.repository.PropostaRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,9 @@ public class PropostaService {
     }
 
     public PropostaResponseDto criar(PropostaRequestDto requestDto) {
-        propostaRepository.save(new Proposta());
-        return null;
+        var proposta = PropostaMapper.instance.convertoDtoToProposta(requestDto);
+        propostaRepository.save(proposta);
+        PropostaResponseDto response = PropostaMapper.instance.convertEntityToDto(proposta);
+        return response;
     }
 }
