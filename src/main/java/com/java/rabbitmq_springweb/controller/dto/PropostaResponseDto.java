@@ -18,7 +18,7 @@ public class PropostaResponseDto {
 
     private Integer prazoPagamento;
 
-    private Boolean aprovado;
+    private Boolean aprovada;
 
     private String observacao;
 
@@ -34,7 +34,7 @@ public class PropostaResponseDto {
                                Double renda,
                                String valorSolicitado,
                                Integer prazoPagamento,
-                               Boolean aprovado,
+                               Boolean aprovada,
                                String observacao) {
         this.id = id;
         this.nome = nome;
@@ -44,7 +44,7 @@ public class PropostaResponseDto {
         this.renda = renda;
         this.valorSolicitado = valorSolicitado;
         this.prazoPagamento = prazoPagamento;
-        this.aprovado = aprovado;
+        this.aprovada = aprovada;
         this.observacao = observacao;
     }
 
@@ -113,11 +113,11 @@ public class PropostaResponseDto {
     }
 
     public Boolean getAprovado() {
-        return aprovado;
+        return aprovada;
     }
 
     public void setAprovado(Boolean aprovado) {
-        this.aprovado = aprovado;
+        this.aprovada = aprovada;
     }
 
     public String getObservacao() {

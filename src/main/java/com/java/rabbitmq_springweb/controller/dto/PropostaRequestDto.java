@@ -12,7 +12,7 @@ public class PropostaRequestDto {
 
     private Double renda;
 
-    private String valorSolicitado;
+    private Double valorSolicitado;
 
     private Integer prazoPagamento;
 
@@ -25,7 +25,7 @@ public class PropostaRequestDto {
                               String telefone,
                               String cpf,
                               Double renda,
-                              String valorSolicitado,
+                              Double valorSolicitado,
                               Integer prazoPagamento) {
         this.nome = nome;
         this.sobrenome = sobrenome;
@@ -76,11 +76,11 @@ public class PropostaRequestDto {
         this.renda = renda;
     }
 
-    public String getValorSolicitado() {
+    public Double getValorSolicitado() {
         return valorSolicitado;
     }
 
-    public void setValorSolicitado(String valorSolicitado) {
+    public void setValorSolicitado(Double valorSolicitado) {
         this.valorSolicitado = valorSolicitado;
     }
 
