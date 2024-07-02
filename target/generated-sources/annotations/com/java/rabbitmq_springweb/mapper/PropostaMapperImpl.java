@@ -4,11 +4,13 @@ import com.java.rabbitmq_springweb.controller.dto.PropostaRequestDto;
 import com.java.rabbitmq_springweb.controller.dto.PropostaResponseDto;
 import com.java.rabbitmq_springweb.entity.Proposta;
 import com.java.rabbitmq_springweb.entity.Usuario;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-01T20:36:22-0300",
+    date = "2024-07-01T22:13:36-0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.2 (Oracle Corporation)"
 )
 public class PropostaMapperImpl implements PropostaMapper {
@@ -49,6 +51,20 @@ public class PropostaMapperImpl implements PropostaMapper {
         propostaResponseDto.setObservacao( proposta.getObservacao() );
 
         return propostaResponseDto;
+    }
+
+    @Override
+    public List<PropostaResponseDto> convertListEntityToListDto(Iterable<Proposta> propostas) {
+        if ( propostas == null ) {
+            return null;
+        }
+
+        List<PropostaResponseDto> list = new ArrayList<PropostaResponseDto>();
+        for ( Proposta proposta : propostas ) {
+            list.add( convertEntityToDto( proposta ) );
+        }
+
+        return list;
     }
 
     protected Usuario propostaRequestDtoToUsuario(PropostaRequestDto propostaRequestDto) {
