@@ -14,7 +14,7 @@ public class PropostaResponseDto {
 
     private Double renda;
 
-    private String valorSolicitado;
+    private String valorSolicitadoFmt;
 
     private Integer prazoPagamento;
 
@@ -32,7 +32,7 @@ public class PropostaResponseDto {
                                String telefone,
                                String cpf,
                                Double renda,
-                               String valorSolicitado,
+                               String valorSolicitadoFmt,
                                Integer prazoPagamento,
                                Boolean aprovada,
                                String observacao) {
@@ -42,7 +42,7 @@ public class PropostaResponseDto {
         this.telefone = telefone;
         this.cpf = cpf;
         this.renda = renda;
-        this.valorSolicitado = valorSolicitado;
+        this.valorSolicitadoFmt = valorSolicitadoFmt;
         this.prazoPagamento = prazoPagamento;
         this.aprovada = aprovada;
         this.observacao = observacao;
@@ -96,12 +96,12 @@ public class PropostaResponseDto {
         this.renda = renda;
     }
 
-    public String getValorSolicitado() {
-        return valorSolicitado;
+    public String getValorSolicitadoFmt() {
+        return valorSolicitadoFmt;
     }
 
-    public void setValorSolicitado(String valorSolicitado) {
-        this.valorSolicitado = valorSolicitado;
+    public void setValorSolicitadoFmt(String valorSolicitado) {
+        this.valorSolicitadoFmt = valorSolicitado;
     }
 
     public Integer getPrazoPagamento() {

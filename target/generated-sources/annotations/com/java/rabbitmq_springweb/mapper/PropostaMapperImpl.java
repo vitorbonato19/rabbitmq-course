@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-01T22:13:36-0300",
+    date = "2024-07-02T21:39:31-0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.2 (Oracle Corporation)"
 )
 public class PropostaMapperImpl implements PropostaMapper {
@@ -44,11 +44,10 @@ public class PropostaMapperImpl implements PropostaMapper {
         propostaResponseDto.setTelefone( propostaUsuarioTelefone( proposta ) );
         propostaResponseDto.setRenda( propostaUsuarioRenda( proposta ) );
         propostaResponseDto.setId( proposta.getId() );
-        if ( proposta.getValorSolicitado() != null ) {
-            propostaResponseDto.setValorSolicitado( String.valueOf( proposta.getValorSolicitado() ) );
-        }
         propostaResponseDto.setPrazoPagamento( proposta.getPrazoPagamento() );
         propostaResponseDto.setObservacao( proposta.getObservacao() );
+
+        propostaResponseDto.setValorSolicitadoFmt( setValorSolicitadoFmt(proposta) );
 
         return propostaResponseDto;
     }
