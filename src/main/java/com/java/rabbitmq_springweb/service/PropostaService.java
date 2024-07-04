@@ -4,6 +4,7 @@ import com.java.rabbitmq_springweb.controller.dto.PropostaRequestDto;
 import com.java.rabbitmq_springweb.controller.dto.PropostaResponseDto;
 import com.java.rabbitmq_springweb.mapper.PropostaMapper;
 import com.java.rabbitmq_springweb.repository.PropostaRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +16,14 @@ public class PropostaService {
 
     private final NotificacaoService notificacaoService;
 
-    public PropostaService(PropostaRepository propostaRepository, NotificacaoService notificacaoService) {
+    private String exchange;
+
+    public PropostaService(PropostaRepository propostaRepository,
+                           NotificacaoService notificacaoService,
+                           @Value("${rabbitmq.exchange.propostapendente}") String exchange) {
         this.propostaRepository = propostaRepository;
         this.notificacaoService = notificacaoService;
+        this.exchange = exchange;
     }
 
     public PropostaResponseDto criar(PropostaRequestDto requestDto) {
