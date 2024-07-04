@@ -1,7 +1,6 @@
 package com.java.rabbitmq_springweb.config;
 
-import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -48,4 +47,23 @@ public class RabbitMqConfig {
     public ApplicationListener<ApplicationReadyEvent> startarAdmin(RabbitAdmin rabbitAdmin) {
         return event -> rabbitAdmin.initialize();
     }
+
+    @Bean
+    public FanoutExchange criarExchangeFanoutPropostaPendente() {
+        return ExchangeBuilder.fanoutExchange("proposta-pendente.ex").build();
+    }
+
+    @Bean
+    public Binding criarBindingPropostaPendenteMSAnaliseCredito() {
+        return BindingBuilder.bind(criarFilaPropostaPendenteMsAnaliseCredito())
+                .to(criarExchangeFanoutPropostaPendente());
+    }
+
+    @Bean
+    public Binding criarBindingPropostaPendenteMSNotificacao() {
+        return BindingBuilder.bind(criarFilaPropostaPendenteMsNotificacao())
+                .to(criarExchangeFanoutPropostaPendente());
+    }
+
+    
 }
