@@ -65,5 +65,5 @@ public class RabbitMqConfig {
                 .to(criarExchangeFanoutPropostaPendente());
     }
 
-    
+
 }
