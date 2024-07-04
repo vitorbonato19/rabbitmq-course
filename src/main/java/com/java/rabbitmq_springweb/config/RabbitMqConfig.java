@@ -1,15 +1,18 @@
 package com.java.rabbitmq_springweb.config;
 
-import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMqConfig {
 
-    private ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
 
     public RabbitMqConfig(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
@@ -36,6 +39,13 @@ public class RabbitMqConfig {
         return QueueBuilder.durable("proposta-concluida.ms-notificacao").build();
     }
 
-    public
+    @Bean
+    public RabbitAdmin criaRabbitAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
+    }
 
+    @Bean
+    public ApplicationListener<ApplicationReadyEvent> startarAdmin(RabbitAdmin rabbitAdmin) {
+        return event -> rabbitAdmin.initialize();
+    }
 }
