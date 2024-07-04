@@ -2,6 +2,7 @@ package com.java.rabbitmq_springweb.service;
 
 import com.java.rabbitmq_springweb.controller.dto.PropostaRequestDto;
 import com.java.rabbitmq_springweb.controller.dto.PropostaResponseDto;
+import com.java.rabbitmq_springweb.entity.Proposta;
 import com.java.rabbitmq_springweb.mapper.PropostaMapper;
 import com.java.rabbitmq_springweb.repository.PropostaRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,26 +15,35 @@ public class PropostaService {
 
     private final PropostaRepository propostaRepository;
 
-    private final NotificacaoService notificacaoService;
+    private final NotificaRabbitService notificaRabbitService;
 
     private String exchange;
 
     public PropostaService(PropostaRepository propostaRepository,
-                           NotificacaoService notificacaoService,
+                           NotificaRabbitService notificaRabbitService,
                            @Value("${rabbitmq.exchange.propostapendente}") String exchange) {
         this.propostaRepository = propostaRepository;
-        this.notificacaoService = notificacaoService;
+        this.notificaRabbitService = notificaRabbitService;
         this.exchange = exchange;
+    }
+
+    public void notificar(Proposta proposta) {
+        try {
+            notificaRabbitService.notificar(proposta, exchange);
+        } catch (RuntimeException ex) {
+            proposta.setIntegrada(false);
+            propostaRepository.save(proposta);
+        }
+
     }
 
     public PropostaResponseDto criar(PropostaRequestDto requestDto) {
 
         var proposta = PropostaMapper.instance.convertoDtoToProposta(requestDto);
         propostaRepository.save(proposta);
+        notificar(proposta);
 
         var response = PropostaMapper.instance.convertEntityToDto(proposta);
-        notificacaoService.notificar(response, "proposta-pendente.ex");
-
         return response;
     }
 

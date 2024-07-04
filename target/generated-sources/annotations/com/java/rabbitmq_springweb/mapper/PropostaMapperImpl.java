@@ -10,7 +10,7 @@ import javax.annotation.processing.Generated;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2024-07-02T21:39:31-0300",
+    date = "2024-07-03T22:33:53-0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.2 (Oracle Corporation)"
 )
 public class PropostaMapperImpl implements PropostaMapper {
@@ -26,6 +26,8 @@ public class PropostaMapperImpl implements PropostaMapper {
         proposta.setUsuario( propostaRequestDtoToUsuario( propostaRequestDto ) );
         proposta.setValorSolicitado( propostaRequestDto.getValorSolicitado() );
         proposta.setPrazoPagamento( propostaRequestDto.getPrazoPagamento() );
+
+        proposta.setIntegrada( true );
 
         return proposta;
     }
