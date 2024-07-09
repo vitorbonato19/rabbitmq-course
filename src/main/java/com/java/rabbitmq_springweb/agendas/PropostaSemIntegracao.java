@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.TimeUnit;
-
 @Component
 public class PropostaSemIntegracao {
 
@@ -18,18 +16,19 @@ public class PropostaSemIntegracao {
 
     private final PropostaRepository propostaRepository;
 
-    @Value("${rabbitmq.exchange.propostapendente}")
     private final String exchange;
 
    private final Logger logger = LoggerFactory.getLogger(PropostaSemIntegracao.class);
 
-    public PropostaSemIntegracao(NotificaRabbitService notificaRabbitService, PropostaRepository propostaRepository, String exchange) {
+    public PropostaSemIntegracao(NotificaRabbitService notificaRabbitService,
+                                 PropostaRepository propostaRepository,
+                                 @Value("${rabbitmq.exchange.propostapendente}") String exchange) {
         this.notificaRabbitService = notificaRabbitService;
         this.propostaRepository = propostaRepository;
         this.exchange = exchange;
     }
 
-    @Scheduled(fixedDelay = 15, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelay = 15000)
     public void buscarPropostasSemIntegracao() {
         propostaRepository.findAllByIntegradaIsFalse().forEach(proposta -> {
             try {

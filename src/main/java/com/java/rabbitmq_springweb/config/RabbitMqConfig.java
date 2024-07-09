@@ -18,7 +18,10 @@ public class RabbitMqConfig {
     private final ConnectionFactory connectionFactory;
 
     @Value("${rabbitmq.exchange.propostapendente}")
-    private String exchange;
+    private String exchangePropostaPendente;
+
+    @Value("${rabbitmq.exchange.propostaconcluida}")
+    private String exchangePropostaConcluida;
 
 
     public RabbitMqConfig(ConnectionFactory connectionFactory) {
@@ -58,8 +61,14 @@ public class RabbitMqConfig {
 
     @Bean
     public FanoutExchange criarExchangeFanoutPropostaPendente() {
-        return ExchangeBuilder.fanoutExchange(exchange).build();
+        return ExchangeBuilder.fanoutExchange(exchangePropostaPendente).build();
     }
+
+    @Bean
+    public FanoutExchange criarExchangeFanoutPropostaConcluida() {
+        return ExchangeBuilder.fanoutExchange(exchangePropostaConcluida).build();
+    }
+
 
     @Bean
     public Binding criarBindingPropostaPendenteMSAnaliseCredito() {
@@ -71,6 +80,18 @@ public class RabbitMqConfig {
     public Binding criarBindingPropostaPendenteMSNotificacao() {
         return BindingBuilder.bind(criarFilaPropostaPendenteMsNotificacao())
                 .to(criarExchangeFanoutPropostaPendente());
+    }
+
+    @Bean
+    public Binding criarBindingPropostaConcluidaMSPropostaApp() {
+        return BindingBuilder.bind(criarFilaPropostaConcluidaMsProposta())
+                .to(criarExchangeFanoutPropostaConcluida());
+    }
+
+    @Bean
+    public Binding criarBindingPropostaConcluidaMSNotificacao() {
+        return BindingBuilder.bind(criarFilaPropostaConcluidaMsNotificacao())
+                .to(criarExchangeFanoutPropostaConcluida());
     }
 
     @Bean
