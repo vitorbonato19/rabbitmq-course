@@ -12,6 +12,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 public class RabbitMqConfig {
 
@@ -23,35 +26,59 @@ public class RabbitMqConfig {
     @Value("${rabbitmq.exchange.propostaconcluida}")
     private String exchangePropostaConcluida;
 
-
     public RabbitMqConfig(ConnectionFactory connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
     @Bean
+    public RabbitAdmin criaRabbitAdmin(ConnectionFactory connectionFactory) {
+        return new RabbitAdmin(connectionFactory);
+    }
+
+    @Bean
     public Queue criarFilaPropostaPendenteMsAnaliseCredito() {
-        return QueueBuilder.durable("proposta-pendente.ms-analise-credito").build();
+        return QueueBuilder.durable("proposta-pendente.ms-analise-credito")
+                .ttl(10000)
+                .maxLength(5L)
+                .deadLetterExchange("proposta-pendente-dlx.ex")
+                .build();
     }
 
     @Bean
     public Queue criarFilaPropostaConcluidaMsProposta() {
-        return QueueBuilder.durable("proposta-concluida.ms-proposta").build();
+        return QueueBuilder.durable("proposta-concluida.ms-proposta")
+                .ttl(10000)
+                .maxLength(5L)
+                .deadLetterExchange("proposta-concluida-dlx.ex")
+                .build();
     }
 
+    @Bean
+    public Queue filaPropostaPendenteDLQ() {
+        return QueueBuilder.durable("proposta-pendente.dlq").build();
+    }
+
+    @Bean
+    public Queue filaPropostaConcluidaDLQ() {
+        return QueueBuilder.durable("proposta-concluida.dlq").build();
+    }
 
     @Bean
     public Queue criarFilaPropostaPendenteMsNotificacao() {
-        return QueueBuilder.durable("proposta-pendente.ms-notificacao").build();
+        return QueueBuilder.durable("proposta-pendente.ms-notificacao")
+                .ttl(10000)
+                .maxLength(5L)
+                .deadLetterExchange("proposta-pendente-dlx.ex")
+                .build();
     }
 
     @Bean
     public Queue criarFilaPropostaConcluidaMsNotificacao() {
-        return QueueBuilder.durable("proposta-concluida.ms-notificacao").build();
-    }
-
-    @Bean
-    public RabbitAdmin criaRabbitAdmin(ConnectionFactory connectionFactory) {
-        return new RabbitAdmin(connectionFactory);
+        return QueueBuilder.durable("proposta-concluida.ms-notificacao")
+                .ttl(10000)
+                .maxLength(5L)
+                .deadLetterExchange("proposta-concluida-dlx.ex")
+                .build();
     }
 
     @Bean
@@ -65,6 +92,16 @@ public class RabbitMqConfig {
     }
 
     @Bean
+    public FanoutExchange exchangeProposatPendenteDLQ() {
+        return ExchangeBuilder.fanoutExchange("proposta-pendente-dlx.ex").build();
+    }
+
+    @Bean
+    public FanoutExchange exchangePropostaConcluidaDLQ() {
+        return ExchangeBuilder.fanoutExchange("proposta-concluida-dlx.ex").build();
+    }
+
+    @Bean
     public FanoutExchange criarExchangeFanoutPropostaConcluida() {
         return ExchangeBuilder.fanoutExchange(exchangePropostaConcluida).build();
     }
@@ -74,6 +111,18 @@ public class RabbitMqConfig {
     public Binding criarBindingPropostaPendenteMSAnaliseCredito() {
         return BindingBuilder.bind(criarFilaPropostaPendenteMsAnaliseCredito())
                 .to(criarExchangeFanoutPropostaPendente());
+    }
+
+    @Bean
+    public Binding bindingPropostaPendenteDLQ() {
+        return BindingBuilder.bind(filaPropostaPendenteDLQ())
+                .to(exchangeProposatPendenteDLQ());
+    }
+
+    @Bean
+    public Binding bindingPropostaConcluidaDLQ() {
+        return BindingBuilder.bind(filaPropostaConcluidaDLQ())
+                .to(exchangePropostaConcluidaDLQ());
     }
 
     @Bean
